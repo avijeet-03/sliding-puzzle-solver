@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Puzzle {
+public class Puzzle implements Comparable<Puzzle> {
     private int rows;
     private int[][] grid;
     private int[] emptySpaceLocation;
@@ -70,6 +70,11 @@ public class Puzzle {
             }
         }
         return total;
+    }
+
+    @Override
+    public int compareTo(Puzzle other) {
+        return Integer.compare(this.farFromSource + this.heuristicValue, other.getFarFromSource() + other.getHeuristicValue());
     }
 
     @Override
