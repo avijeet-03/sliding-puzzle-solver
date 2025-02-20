@@ -10,5 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransitionState {
-
+    int[][] previousState;
+    int[][] currentState;
 }

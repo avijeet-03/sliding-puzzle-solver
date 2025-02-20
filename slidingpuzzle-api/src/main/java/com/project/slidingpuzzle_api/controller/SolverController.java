@@ -2,6 +2,7 @@ package com.project.slidingpuzzle_api.controller;
 
 import com.project.slidingpuzzle_api.model.PuzzleState;
 import com.project.slidingpuzzle_api.service.SolverAlgorithmService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +24,17 @@ public class SolverController {
     }
 
     @GetMapping("/shuffle")
-    public ResponseEntity<Object> getRandomShuffledState(@RequestParam Integer size) {
+    public ResponseEntity<Object> getRandomShuffledState(@RequestParam(defaultValue = "3") Integer size) {
         try {
             PuzzleState randomState = solverAlgorithmService.getRandomShuffledState(size);
             return ResponseEntity.ok(randomState);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unable to process the request" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unable to generate a random puzzle. ERROR: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/test-application-health")
+    public ResponseEntity<String> getApplicationHealth() {
+        return ResponseEntity.ok("The Application is up and Running");
     }
 }
