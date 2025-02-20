@@ -1,77 +1,95 @@
 package com.project.slidingpuzzle_api.service;
 
-import com.project.slidingpuzzle_api.model.PuzzleState;
+import com.project.slidingpuzzle_api.model.Puzzle;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MovementService {
-    private int rows;
+    // this class should import the Puzzle and tweak the heuristic value with each move
     private static final Integer TOTAL_RANDOM_MOVES = 1000;
-    private int blankPosRow;
-    private int blankPosCol;
+    private int dimension;
+    private static final int[][] directions = {
+            {-1, 0}, // UP
+            {0, 1}, // RIGHT
+            {1, 0}, // DOWN
+            {0, -1} // LEFT
+    };
 
-    public int[][] getRandomStartingState(int[][] grid) {
-        // here the incoming grid will be at the starting state only
-        rows = grid.length;
-        blankPosRow = rows - 1;
-        blankPosCol = rows - 1;
+    public Puzzle getRandomSolvableState(int size) {
+        this.dimension = size;
+        // since all random states are not solvable
+        // we have to go from the starting state and do random moves backwards
 
-        // keep track of the last move, so we don't end up cancelling the same move in next step
-        // e.g. UP and then DOWN
-        // 0: UP, 1: DOWN, 2: LEFT, 3: RIGHT
-
+        // keep track of the last move to avoid nullifying the previous move
+        Puzzle puzzle = new Puzzle(size);
+        int last = -1;
         for (int moves = 0; moves < TOTAL_RANDOM_MOVES; moves++) {
-            int randomDirection = (int)(Math.random() * 4);
-            int lastValidMove = -1;
-
-            if (randomDirection == 0 && lastValidMove != 1 && moveUp(grid)) {
-                lastValidMove = 0;
-            } else if (randomDirection == 1 && lastValidMove != 0 && moveDown(grid)) {
-                lastValidMove = 1;
-            } else if (randomDirection == 2 && lastValidMove != 3 && moveLeft(grid)) {
-                lastValidMove = 2;
-            } else if (randomDirection == 3 && lastValidMove != 2 && moveRight(grid)) {
-                lastValidMove = 3;
+            int dir = (int)(Math.random() * 4);
+            if (getToTheNextState(puzzle, dir, last)) {
+                // update the last direction if this movement is successful
+                last = dir;
             }
         }
-        return grid;
+
+        return puzzle;
     }
 
-    private boolean moveUp(int[][] grid) {
-        // blank space is moved up
-        if (blankPosRow == 0) return false;
-        swap(grid, blankPosRow - 1, blankPosCol);
+    public boolean getToTheNextState(Puzzle puzzle, int dir, int lastDir) {
+        this.dimension = puzzle.getRows();
+
+        if (lastDir != -1 && (dir != lastDir) && (dir % 2 == lastDir % 2)) {
+            // this direction and last direction are opposite
+            return false;
+        }
+
+        int emptyRow = puzzle.getEmptySpaceLocation()[0];
+        int emptyCol = puzzle.getEmptySpaceLocation()[1];
+
+        int nextEmptyRow = emptyRow + directions[dir][0];
+        int nextEmptyCol = emptyCol + directions[dir][1];
+
+        if (nextEmptyRow < 0 || nextEmptyRow >= puzzle.getRows() || nextEmptyCol < 0 || nextEmptyCol >= puzzle.getRows()) {
+            return false;
+        }
+        // swapping can be done now
+        int[] sourcePosition = new int[]{emptyRow, emptyCol};
+        int[] targetPosition = new int[]{nextEmptyRow, nextEmptyCol};
+        swap(puzzle.getGrid(), sourcePosition, targetPosition);
+
+        // now update all the info of the received puzzle
+        // update new empty space location
+        puzzle.setEmptySpaceLocation(targetPosition);
+        // update the heuristic value
+        int difference = getHeuristicDelta(puzzle, sourcePosition, targetPosition);
+        puzzle.setHeuristicValue(puzzle.getHeuristicValue() + difference);
+        // update the far from source, we get one distance ahead
+        puzzle.setFarFromSource(puzzle.getFarFromSource() + 1);
+
         return true;
     }
 
-    private boolean moveDown(int[][] grid) {
-        // blank space is moved down
-        if (blankPosRow == rows - 1) return false;
-        swap(grid, blankPosRow + 1, blankPosCol);
-        return true;
+    private int getIndividualHeuristicContribution(int val, int row, int col) {
+        int orgRow = (val - 1) / this.dimension;
+        int orgCol = (val - 1) % this.dimension;
+
+        return Math.abs(row - orgRow) + Math.abs(col - orgCol);
     }
 
-    private boolean moveLeft(int[][] grid) {
-        // blank space is moved left
-        if (blankPosCol == 0) return false;
-        swap(grid, blankPosRow, blankPosCol - 1);
-        return true;
+    private int getHeuristicDelta(Puzzle puzzle, int[] sourcePosition, int[] targetPosition) {
+        // 0 is at source and non-zero is at target
+        // to calculate change of individual heuristic contribution to the total only for the non-zero state
+
+        // swapping has been done, now the non-zero value is at source
+        int val = puzzle.getGrid()[sourcePosition[0]][sourcePosition[1]];
+        int previousContribution = getIndividualHeuristicContribution(val, targetPosition[0], targetPosition[1]);
+        int currentContribution = getIndividualHeuristicContribution(val, sourcePosition[0], sourcePosition[1]);
+
+        return currentContribution - previousContribution;
     }
 
-    private boolean moveRight(int[][] grid) {
-        // blank space is moved right
-        if (blankPosCol == rows - 1) return false;
-        swap(grid, blankPosRow, blankPosCol + 1);
-        return true;
-    }
-
-    private void swap(int[][] grid, int targetRow, int targetCol) {
-        int temp = grid[blankPosRow][blankPosCol];
-        grid[blankPosRow][blankPosCol] = grid[targetRow][targetCol];
-        grid[targetRow][targetCol] = temp;
-
-        // update the blank space position
-        blankPosRow = targetRow;
-        blankPosCol = targetCol;
+    private void swap(int[][] grid, int[] sourcePosition, int[] targetPosition) {
+        int temp = grid[sourcePosition[0]][sourcePosition[1]];
+        grid[sourcePosition[0]][sourcePosition[1]] = grid[targetPosition[0]][targetPosition[1]];
+        grid[targetPosition[0]][targetPosition[1]] = temp;
     }
 }

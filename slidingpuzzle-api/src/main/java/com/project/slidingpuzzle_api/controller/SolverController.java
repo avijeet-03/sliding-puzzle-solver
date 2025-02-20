@@ -1,8 +1,8 @@
 package com.project.slidingpuzzle_api.controller;
 
-import com.project.slidingpuzzle_api.model.PuzzleState;
+import com.project.slidingpuzzle_api.dto.PuzzleDTO;
+import com.project.slidingpuzzle_api.model.Puzzle;
 import com.project.slidingpuzzle_api.service.SolverAlgorithmService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class SolverController {
     SolverAlgorithmService solverAlgorithmService;
 
     @PostMapping("/solve")
-    public ResponseEntity<Object> getSolvedSolution(@RequestBody PuzzleState puzzleState) {
+    public ResponseEntity<Object> getSolvedSolution(@RequestBody Puzzle puzzle) {
         // if invalid state, return 400 error
         // if server error, return 500 error
         return ResponseEntity.ok("API setup is done");
@@ -26,7 +26,7 @@ public class SolverController {
     @GetMapping("/shuffle")
     public ResponseEntity<Object> getRandomShuffledState(@RequestParam(defaultValue = "3") Integer size) {
         try {
-            PuzzleState randomState = solverAlgorithmService.getRandomShuffledState(size);
+            PuzzleDTO randomState = solverAlgorithmService.getRandomShuffledState(size);
             return ResponseEntity.ok(randomState);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unable to generate a random puzzle. ERROR: " + e.getMessage());

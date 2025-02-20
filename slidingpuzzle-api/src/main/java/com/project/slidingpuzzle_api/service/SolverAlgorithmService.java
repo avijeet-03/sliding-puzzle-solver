@@ -1,6 +1,7 @@
 package com.project.slidingpuzzle_api.service;
 
-import com.project.slidingpuzzle_api.model.PuzzleState;
+import com.project.slidingpuzzle_api.dto.PuzzleDTO;
+import com.project.slidingpuzzle_api.model.Puzzle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +10,9 @@ public class SolverAlgorithmService {
     @Autowired
     MovementService movementService;
 
-    public PuzzleState getRandomShuffledState(int size) {
-        // do all the moves randomly
-        PuzzleState currentPuzzleState = new PuzzleState(size);
-        currentPuzzleState.setGrid(movementService.getRandomStartingState(currentPuzzleState.getGrid()));
-        return currentPuzzleState;
+    public PuzzleDTO getRandomShuffledState(int size) {
+        Puzzle puzzle = movementService.getRandomSolvableState(size);
+        return new PuzzleDTO(size, puzzle.getGrid());
     }
 
 }
