@@ -25,6 +25,9 @@ public class MovementService {
         Puzzle puzzle = new Puzzle(size);
         int last = -1;
         for (int moves = 0; moves < TOTAL_RANDOM_MOVES; moves++) {
+            if (puzzle.getFarFromSource() >= 25) {
+                break;
+            }
             int dir = (int)(Math.random() * 4);
             if (getToTheNextState(puzzle, dir, last)) {
                 // update the last direction if this movement is successful

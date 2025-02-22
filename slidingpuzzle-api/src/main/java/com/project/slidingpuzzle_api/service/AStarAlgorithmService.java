@@ -1,6 +1,7 @@
 package com.project.slidingpuzzle_api.service;
 
 import com.project.slidingpuzzle_api.dto.TransitionStateDTO;
+import com.project.slidingpuzzle_api.exception.PuzzleTimeoutException;
 import com.project.slidingpuzzle_api.model.MovementConstants;
 import com.project.slidingpuzzle_api.model.Puzzle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class AStarAlgorithmService {
             if (currState.getHeuristicValue() == 0) {
                 targetPuzzleState = new Puzzle(currState);
                 break;
+            }
+            if (currState.getFarFromSource() > 20) {
+                throw new PuzzleTimeoutException("Puzzle is VERY HARD for a normal computer to solve");
             }
             // now for each of its adjacent, add it to the
             for (int dir = 0; dir < 4; dir++) {

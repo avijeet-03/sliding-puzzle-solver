@@ -2,6 +2,8 @@ package com.project.slidingpuzzle_api.controller;
 
 import com.project.slidingpuzzle_api.dto.PuzzleDTO;
 import com.project.slidingpuzzle_api.dto.TransitionStateDTO;
+import com.project.slidingpuzzle_api.exception.PuzzleTimeoutException;
+import com.project.slidingpuzzle_api.model.Puzzle;
 import com.project.slidingpuzzle_api.service.SolverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,8 @@ public class SolverController {
         try {
             List<TransitionStateDTO> solutionPath = solverService.getSolutionPath(puzzleDTO);
             return ResponseEntity.ok(solutionPath);
+        } catch (PuzzleTimeoutException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ERROR: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred in the server. ERROR: " + e.getMessage());
         }

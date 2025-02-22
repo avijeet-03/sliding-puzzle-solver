@@ -99,6 +99,7 @@ public class Puzzle implements Comparable<Puzzle> {
 
     @Override
     public int compareTo(Puzzle other) {
+        // TODO: implement tie breaker logic here
         return Integer.compare(this.farFromSource + this.heuristicValue, other.getFarFromSource() + other.getHeuristicValue());
     }
 
