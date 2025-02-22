@@ -1,6 +1,5 @@
 package com.project.slidingpuzzle_api.service;
 
-import com.project.slidingpuzzle_api.dto.TransitionStateDTO;
 import com.project.slidingpuzzle_api.exception.PuzzleTimeoutException;
 import com.project.slidingpuzzle_api.model.MovementConstants;
 import com.project.slidingpuzzle_api.model.Puzzle;
@@ -20,7 +19,7 @@ public class AStarAlgorithmService {
 
     private final String[] MOVEMENT_DECIDER = {MovementConstants.UP, MovementConstants.RIGHT, MovementConstants.DOWN, MovementConstants.LEFT};
 
-    public List<TransitionStateDTO> getShortestPathSolution(Puzzle puzzle) {
+    public List<int[][]> getShortestPathSolution(Puzzle puzzle) {
         // declare a priority queue here
         PriorityQueue<Puzzle> pq = new PriorityQueue<>();
         pq.add(puzzle);
@@ -59,17 +58,11 @@ public class AStarAlgorithmService {
         return getListOfTransitionDetails(targetPuzzleState);
     }
 
-    private List<TransitionStateDTO> getListOfTransitionDetails(Puzzle targetPuzzleState) {
-        List<TransitionStateDTO> results = new ArrayList<>();
-        while (null != targetPuzzleState.getParentPuzzle()) {
-            TransitionStateDTO currentTransition = new TransitionStateDTO();
-            currentTransition.setMoveType(targetPuzzleState.getMoveType());
-            currentTransition.setTargetGrid(targetPuzzleState.getGrid());
-            currentTransition.setSourceGrid(targetPuzzleState.getParentPuzzle().getGrid());
-
+    private List<int[][]> getListOfTransitionDetails(Puzzle targetPuzzleState) {
+        List<int[][]> results = new ArrayList<>();
+        while (null != targetPuzzleState) {
             // add this to the result
-            results.add(currentTransition);
-
+            results.add(targetPuzzleState.getGrid());
             // trace back to the parent of this current state
             targetPuzzleState = targetPuzzleState.getParentPuzzle();
         }

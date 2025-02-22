@@ -1,7 +1,6 @@
 package com.project.slidingpuzzle_api.service;
 
 import com.project.slidingpuzzle_api.dto.PuzzleDTO;
-import com.project.slidingpuzzle_api.dto.TransitionStateDTO;
 import com.project.slidingpuzzle_api.model.Puzzle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,7 @@ public class SolverService {
         return (lowestValue == 0 && greatestValue == dimension * dimension - 1 && hashSet.size() == dimension * dimension);
     }
 
-    public List<TransitionStateDTO> getSolutionPath(PuzzleDTO puzzleDTO) {
+    public List<int[][]> getSolutionPath(PuzzleDTO puzzleDTO) {
         // create a new Puzzle object here and call the A* algorithm service
         Puzzle puzzle = new Puzzle(puzzleDTO);
         return aStarAlgorithmService.getShortestPathSolution(puzzle);
