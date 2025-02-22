@@ -17,7 +17,9 @@ public class Puzzle implements Comparable<Puzzle> {
     // the move Type for transition from parent to current
     private String moveType;
     // the previous state during the transition
-    private int[][] parentGrid;
+    private Puzzle parentPuzzle;
+    // has this state been calculated and all of its adjacent are relaxed
+    private boolean relaxed;
     private int[][] grid;
     private int[] emptySpaceLocation;
     private int heuristicValue;
@@ -34,7 +36,8 @@ public class Puzzle implements Comparable<Puzzle> {
             }
         }
         grid[rows - 1][rows - 1] = 0;
-        parentGrid = Arrays.copyOf(grid, grid.length);
+        parentPuzzle = null;
+        this.relaxed = false;
         emptySpaceLocation = new int[2];
         emptySpaceLocation[0] = emptySpaceLocation[1] = rows - 1;
 
@@ -52,10 +55,25 @@ public class Puzzle implements Comparable<Puzzle> {
         for (int i = 0; i < rows; i++)
             grid[i] = Arrays.copyOf(puzzleDTO.getGrid()[i], puzzleDTO.getGrid()[i].length);
         emptySpaceLocation = new int[2];
-        parentGrid = Arrays.copyOf(grid, grid.length);
+        parentPuzzle =  null;
+        this.relaxed = false;
         this.heuristicValue = calculateManhattanDistance();
         // this is not zero, and it will be updated during the transition of the A* algorithm
         this.farFromSource = 0;
+    }
+
+    // copy constructor
+    public Puzzle(Puzzle other) {
+        this.rows = other.rows;
+        this.moveType = other.moveType;
+        this.grid = new int[rows][rows];
+        for (int i = 0; i < this.rows; i++)
+            grid[i] = Arrays.copyOf(other.grid[i], other.grid[i].length);
+        this.emptySpaceLocation = Arrays.copyOf(other.emptySpaceLocation, other.emptySpaceLocation.length);
+        this.parentPuzzle = null; // to be set manually later
+        this.relaxed = false;
+        this.heuristicValue = other.heuristicValue;
+        this.farFromSource = other.farFromSource;
     }
 
     private int calculateManhattanDistance() {
