@@ -1,5 +1,6 @@
 package com.project.slidingpuzzle_api.service;
 
+import com.project.slidingpuzzle_api.model.MovementConstants;
 import com.project.slidingpuzzle_api.model.Puzzle;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,6 @@ public class MovementService {
             // this direction and last direction are opposite
             return false;
         }
-
         int emptyRow = puzzle.getEmptySpaceLocation()[0];
         int emptyCol = puzzle.getEmptySpaceLocation()[1];
 

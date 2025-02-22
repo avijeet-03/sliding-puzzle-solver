@@ -70,7 +70,7 @@ public class Puzzle implements Comparable<Puzzle> {
         for (int i = 0; i < this.rows; i++)
             grid[i] = Arrays.copyOf(other.grid[i], other.grid[i].length);
         this.emptySpaceLocation = Arrays.copyOf(other.emptySpaceLocation, other.emptySpaceLocation.length);
-        this.parentPuzzle = null; // to be set manually later
+        this.parentPuzzle = other.parentPuzzle; // update it manually whenever the parent node is changing
         this.relaxed = false;
         this.heuristicValue = other.heuristicValue;
         this.farFromSource = other.farFromSource;

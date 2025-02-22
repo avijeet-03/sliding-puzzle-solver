@@ -1,8 +1,8 @@
 package com.project.slidingpuzzle_api.model;
 
-public class Moves {
-    public String UP = "UP";
-    public String RIGHT = "RIGHT";
-    public String DOWN = "DOWN";
-    public String LEFT = "LEFT";
+public class MovementConstants {
+    public static final String UP = "UP";
+    public static final String RIGHT = "RIGHT";
+    public static final String DOWN = "DOWN";
+    public static final String LEFT = "LEFT";
 }
