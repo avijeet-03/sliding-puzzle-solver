@@ -14,6 +14,10 @@ import java.util.Arrays;
 @AllArgsConstructor
 public class Puzzle implements Comparable<Puzzle> {
     private int rows;
+    // the move Type for transition from parent to current
+    private String moveType;
+    // the previous state during the transition
+    private int[][] parentGrid;
     private int[][] grid;
     private int[] emptySpaceLocation;
     private int heuristicValue;
@@ -22,6 +26,7 @@ public class Puzzle implements Comparable<Puzzle> {
 
     public Puzzle(int n) {
         this.rows = n;
+        this.moveType = null;
         grid = new int[n][n];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < rows; j++) {
@@ -29,6 +34,7 @@ public class Puzzle implements Comparable<Puzzle> {
             }
         }
         grid[rows - 1][rows - 1] = 0;
+        parentGrid = Arrays.copyOf(grid, grid.length);
         emptySpaceLocation = new int[2];
         emptySpaceLocation[0] = emptySpaceLocation[1] = rows - 1;
 
@@ -40,12 +46,13 @@ public class Puzzle implements Comparable<Puzzle> {
 
     public Puzzle(PuzzleDTO puzzleDTO) {
         this.rows = puzzleDTO.getRows();
+        this.moveType = null;
         // do a deep copy of the grid inside puzzleDTO
         this.grid = new int[rows][rows];
         for (int i = 0; i < rows; i++)
             grid[i] = Arrays.copyOf(puzzleDTO.getGrid()[i], puzzleDTO.getGrid()[i].length);
         emptySpaceLocation = new int[2];
-
+        parentGrid = Arrays.copyOf(grid, grid.length);
         this.heuristicValue = calculateManhattanDistance();
         // this is not zero, and it will be updated during the transition of the A* algorithm
         this.farFromSource = 0;
