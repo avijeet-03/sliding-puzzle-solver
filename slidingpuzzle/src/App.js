@@ -28,17 +28,13 @@ const App = () => {
 
   // fetch and set shuffled grid
   const handleShuffle = async () => {
-    try {
-      const shuffledGrid = await fetchShuffledGrid();
-      setStartingGrid(shuffledGrid.grid);
-      setGrid(shuffledGrid.grid);
-      setIsSolved(false);
-      setSolutionSteps([]);
-      setSolutionStepIndex(0);
-      setMovesUsed(0);
-    } catch (error) {
-      handleApiError(error);
-    }
+    const shuffledGrid = await fetchShuffledGrid();
+    setStartingGrid(shuffledGrid.grid);
+    setGrid(shuffledGrid.grid);
+    setIsSolved(false);
+    setSolutionSteps([]);
+    setSolutionStepIndex(0);
+    setMovesUsed(0);
   }
 
   // Retry the same Game
@@ -79,7 +75,7 @@ const App = () => {
       const errorMessage = await error.response.text();
       setError(`Error: ${errorMessage}`);
     } else {
-      setError("An unknown error occurred");
+      setError("An unknown error occurred! Please start a new Game");
     }
   };
 
