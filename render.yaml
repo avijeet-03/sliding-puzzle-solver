@@ -1,7 +1,6 @@
 services:
   - name: sliding-puzzle-api
     type: web
-    runtime: java
     plan: free
     repo: https://github.com/avijeet-03/sliding-puzzle-solver
     rootDir: slidingpuzzle-api
