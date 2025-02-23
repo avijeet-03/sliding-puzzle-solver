@@ -130,10 +130,10 @@ const App = () => {
           {/* Navigation Buttons */}
           <div className="mt-4 flex justify-center gap-4">
             <button onClick={handlePrevStep} disabled={solutionStepIndex === 0} className="px-4 py-2 bg-gray-400 rounded">
-              ⬅️ Left
+              ⬅️ Prev
             </button>
             <button onClick={handleNextStep} disabled={solutionStepIndex === solutionSteps.length - 1} className="px-4 py-2 bg-blue-500 text-white rounded">
-              ➡️ Right
+              ➡️ Next
             </button>
             <button> {solutionStepIndex} / {solutionSteps.length - 1} </button>
           </div>
