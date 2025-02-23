@@ -1,0 +1,30 @@
+body {
+  background-color: #272822; /* Monokai Dark Background */
+  color: #F8F8F2; /* Light text */
+  font-family: "Courier New", monospace; /* Monospace font */
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  background-color: #66D9EF; /* Monokai Blue */
+  color: #272822; /* Dark text */
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #A6E22E; /* Monokai Green */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
