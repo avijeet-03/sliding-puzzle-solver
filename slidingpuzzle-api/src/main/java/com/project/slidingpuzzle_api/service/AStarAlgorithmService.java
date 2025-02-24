@@ -37,7 +37,7 @@ public class AStarAlgorithmService {
                 targetPuzzleState = new Puzzle(currState);
                 break;
             }
-            if (currState.getFarFromSource() > 20) {
+            if (currState.getFarFromSource() > 15) {
                 throw new PuzzleTimeoutException("Puzzle is VERY HARD for a normal computer to solve");
             }
             // now for each of its adjacent, add it to the
