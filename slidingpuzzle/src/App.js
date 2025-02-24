@@ -116,6 +116,7 @@ const App = () => {
       <div className="flex justify-center">
         <h1 className="text-2xl font-bold">Sliding Puzzle</h1>
       </div>
+      <h3>Can you do it in least possible moves?</h3>
       <p className="text-green-500 font-bold text-xl">Moves Used: {movesUsed}</p>
       {isSolved && <p className="text-green-500 font-bold text-xl">🎉 Puzzle Solved! 🎉</p>}
       {error && <Popup message={error} onClose={() => setError(null)} />}
