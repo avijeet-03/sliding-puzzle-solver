@@ -5,7 +5,7 @@ const BASE_API_URL =
 
 // Fetch a random shuffled puzzle from the backend
 export const fetchShuffledGrid = async () => {
-    const response = await fetch(`${BASE_API_URL}/shuffle`);
+    const response = await fetch(`${BASE_API_URL}/api/puzzle/shuffle`);
     return response.json();
 }
 
@@ -16,7 +16,7 @@ export const fetchSolution = async (grid) => {
         grid: grid
     };
 
-    const response = await fetch(`${BASE_API_URL}/solve`, {
+    const response = await fetch(`${BASE_API_URL}/api/puzzle/solve`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
