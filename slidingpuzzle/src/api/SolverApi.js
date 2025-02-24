@@ -1,8 +1,11 @@
-const BASE_URL = "http://localhost:9000/api/puzzle";
+const BASE_API_URL = 
+    process.env.NODE_ENV === "production"
+    ? "https://sliding-puzzle-solver-api.onrender.com"
+    : "http://localhost:9000"
 
 // Fetch a random shuffled puzzle from the backend
 export const fetchShuffledGrid = async () => {
-    const response = await fetch(`${BASE_URL}/shuffle`);
+    const response = await fetch(`${BASE_API_URL}/shuffle`);
     return response.json();
 }
 
@@ -13,7 +16,7 @@ export const fetchSolution = async (grid) => {
         grid: grid
     };
 
-    const response = await fetch(`${BASE_URL}/solve`, {
+    const response = await fetch(`${BASE_API_URL}/solve`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
