@@ -22,39 +22,42 @@ public class AStarAlgorithmService {
     public List<int[][]> getShortestPathSolution(Puzzle puzzle) {
         // declare a priority queue here
         PriorityQueue<Puzzle> pq = new PriorityQueue<>();
-        pq.add(puzzle);
-        // at the end we will be having our solution object
-        // from this solution object, we trace down all the
         Puzzle targetPuzzleState = null;
+        try {
+            pq.add(puzzle);
+            // at the end we will be having our solution object
+            // from this solution object, we trace down all the
 
-        while (!pq.isEmpty()) {
-            Puzzle currState = pq.poll();
-            if (currState.isRelaxed()) {
-                continue;
-            }
-            currState.setRelaxed(true);
-            if (currState.getHeuristicValue() == 0) {
-                targetPuzzleState = new Puzzle(currState);
-                break;
-            }
-            if (currState.getFarFromSource() > 15) {
-                throw new PuzzleTimeoutException("Puzzle is VERY HARD for a normal computer to solve");
-            }
-            // now for each of its adjacent, add it to the
-            for (int dir = 0; dir < 4; dir++) {
-                Puzzle adjacentState = new Puzzle(currState);
-                if (movementService.getToTheNextState(adjacentState, dir, -1)) {
-                    // Puzzle transformed to adjacent stage
-                    adjacentState.setParentPuzzle(currState);
-                    adjacentState.setMoveType(MOVEMENT_DECIDER[dir]);
-                    // all other fields got updated in the movement service
-                    pq.add(adjacentState);
+            while (!pq.isEmpty()) {
+                Puzzle currState = pq.poll();
+                if (currState.isRelaxed()) {
+                    continue;
+                }
+                currState.setRelaxed(true);
+                if (currState.getHeuristicValue() == 0) {
+                    targetPuzzleState = new Puzzle(currState);
+                    break;
+                }
+                if (currState.getFarFromSource() > 25) {
+                    throw new PuzzleTimeoutException("Puzzle is VERY HARD for a normal computer to solve");
+                }
+                // now for each of its adjacent, add it to the
+                for (int dir = 0; dir < 4; dir++) {
+                    Puzzle adjacentState = new Puzzle(currState);
+                    if (movementService.getToTheNextState(adjacentState, dir, -1)) {
+                        // Puzzle transformed to adjacent stage
+                        adjacentState.setParentPuzzle(currState);
+                        adjacentState.setMoveType(MOVEMENT_DECIDER[dir]);
+                        // all other fields got updated in the movement service
+                        pq.add(adjacentState);
+                    }
                 }
             }
+        } finally {
+            pq.clear();
         }
 
         // now we need to trace back the steps from the final State
-
         return getListOfTransitionDetails(targetPuzzleState);
     }
 
